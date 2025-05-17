@@ -1,0 +1,4 @@
+pubspec.lock
+.git/
+.gitignore
+.pubignore 

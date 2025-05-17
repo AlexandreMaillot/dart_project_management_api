@@ -2,6 +2,7 @@ name: dart_project_management_api
 description: dart project management api
 version: 0.1.0+1
 publish_to: none
+repository: https://github.com/alexandremaillot/dart_project_management_api
 
 environment:
   sdk: ^3.5.0
