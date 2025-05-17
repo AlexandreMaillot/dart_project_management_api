@@ -16,11 +16,10 @@ import 'package:dart_project_management_api/src/models/view.dart';
 import 'package:http/http.dart';
 import 'package:test/test.dart';
 
-const apiKey =
-    'dsa_b1d71431c5015319f8015eb691cfe6f3d4d74816927c2878fb11dabb9109ac75';
-const dartboardId = 's5Vd5aLKRPDr';
-const taskId = 'xqhp7a5Kggp8';
-const dartboard = 'PriseNote/Tasks';
+const apiKey = 'dsa_xxxx';
+const dartboardId = 'xxxx';
+const taskId = 'xxxx';
+const dartboard = 'xxxx';
 void main() {
   late DartProjectManagementApi api;
 
