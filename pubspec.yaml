@@ -1,8 +1,10 @@
 name: dart_project_management_api
-description: dart project management api
+description: A powerful Dart API for seamless integration with Dart's AI-native project management platform. This package provides comprehensive tools for project management, task automation, and team collaboration, leveraging Dart's advanced AI capabilities.
 version: 0.1.0+1
-publish_to: none
 repository: https://github.com/alexandremaillot/dart_project_management_api
+homepage: https://github.com/alexandremaillot/dart_project_management_api
+documentation: https://pub.dev/documentation/dart_project_management_api
+issue_tracker: https://github.com/alexandremaillot/dart_project_management_api/issues
 
 environment:
   sdk: ^3.5.0
@@ -18,3 +20,16 @@ dev_dependencies:
   mocktail: ^1.0.4
   test: ^1.25.8
   very_good_analysis: ^6.0.0
+
+# Additional metadata for pub.dev
+topics:
+  - project-management
+  - ai
+  - dart
+  - flutter
+  - productivity
+  - task-management
+  - team-collaboration
+
+# License information
+license: MIT
