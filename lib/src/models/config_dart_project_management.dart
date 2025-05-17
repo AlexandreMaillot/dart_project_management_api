@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:dart_project_management_api/src/models/assignee.dart';
 import 'package:dart_project_management_api/src/models/user.dart';
 import 'package:equatable/equatable.dart';

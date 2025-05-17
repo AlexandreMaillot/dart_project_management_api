@@ -115,6 +115,8 @@ class Task extends Equatable {
   /// Converts a DateTime to a date string in "YYYY-MM-DD" format.
   static String? _dateToString(DateTime? date) {
     if (date == null || date.year == 0) return null;
-    return "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    return "${date.year.toString().padLeft(4, '0')}-"
+        "${date.month.toString().padLeft(2, '0')}-"
+        "${date.day.toString().padLeft(2, '0')}";
   }
 }

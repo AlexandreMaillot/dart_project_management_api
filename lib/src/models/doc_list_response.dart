@@ -1,7 +1,6 @@
+import 'package:dart_project_management_api/src/models/doc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'package:dart_project_management_api/src/models/doc.dart';
 
 part 'doc_list_response.g.dart';
 

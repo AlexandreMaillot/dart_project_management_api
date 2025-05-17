@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:convert';
 
 import 'package:dart_project_management_api/src/models/comment.dart';
@@ -334,7 +336,6 @@ class DartProjectManagementApi {
       throw Exception('Failed to list tasks: ${response.body}');
     }
 
-    print(response.body);
     return TaskListResponse.fromJson(
       jsonDecode(response.body) as Map<String, dynamic>,
     );
