@@ -16,6 +16,35 @@ import 'package:dart_project_management_api/src/models/task_request.dart';
 import 'package:dart_project_management_api/src/models/view.dart';
 import 'package:http/http.dart';
 
+// Exceptions personnalisées pour l'API
+abstract class DartApiException implements Exception {
+  final String message;
+  final int? statusCode;
+  DartApiException(this.message, {this.statusCode});
+  @override
+  String toString() => '$runtimeType: $message';
+}
+
+class DartApiNetworkException extends DartApiException {
+  DartApiNetworkException(String message, {int? statusCode}) : super(message, statusCode: statusCode);
+}
+
+class DartApiNotFoundException extends DartApiException {
+  DartApiNotFoundException(String message, {int? statusCode}) : super(message, statusCode: statusCode);
+}
+
+class DartApiUnauthorizedException extends DartApiException {
+  DartApiUnauthorizedException(String message, {int? statusCode}) : super(message, statusCode: statusCode);
+}
+
+class DartApiValidationException extends DartApiException {
+  DartApiValidationException(String message, {int? statusCode}) : super(message, statusCode: statusCode);
+}
+
+class DartApiUnknownException extends DartApiException {
+  DartApiUnknownException(String message, {int? statusCode}) : super(message, statusCode: statusCode);
+}
+
 /// {@template dart_project_management_api}
 /// dart project management api
 /// {@endtemplate}
@@ -56,8 +85,14 @@ class DartProjectManagementApi {
       },
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 404) {
+      throw DartApiNotFoundException('Configuration not found: ${response.body}', statusCode: 404);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to load config: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to load config: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     return ConfigDPM.fromJson(
@@ -94,10 +129,14 @@ class DartProjectManagementApi {
       body: jsonEncode({'item': request.toJson()}),
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 400) {
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
+    }
     if (response.statusCode != 200) {
-      throw Exception(
-        'Failed to create comment: ${response.statusCode}',
-      );
+      throw DartApiUnknownException('Failed to create comment: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -130,8 +169,14 @@ class DartProjectManagementApi {
       },
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 404) {
+      throw DartApiNotFoundException('Dartboard not found: ${response.body}', statusCode: 404);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to load dartboard: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to load dartboard: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -152,12 +197,17 @@ class DartProjectManagementApi {
       body: jsonEncode({'item': request.toJson()}),
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 400) {
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to create task: ${response.body}');
+      throw DartApiUnknownException('Failed to create task: ${response.body}', statusCode: response.statusCode);
     }
 
     final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-
     return Task.fromJson(jsonResponse['item'] as Map<String, dynamic>);
   }
 
@@ -174,8 +224,14 @@ class DartProjectManagementApi {
       },
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 404) {
+      throw DartApiNotFoundException('Task not found: ${response.body}', statusCode: 404);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to get task: ${response.body}');
+      throw DartApiUnknownException('Failed to get task: ${response.body}', statusCode: response.statusCode);
     }
 
     final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
@@ -196,8 +252,17 @@ class DartProjectManagementApi {
       body: jsonEncode({'item': request.toJson()}),
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 404) {
+      throw DartApiNotFoundException('Task not found: ${response.body}', statusCode: 404);
+    }
+    if (response.statusCode == 400) {
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to update task: ${response.body}');
+      throw DartApiUnknownException('Failed to update task: ${response.body}', statusCode: response.statusCode);
     }
 
     final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
@@ -218,13 +283,16 @@ class DartProjectManagementApi {
     );
 
     if (response.statusCode == 400) {
-      throw Exception(
-        'Invalid request, including the errors: ${response.body}',
-      );
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
     }
-
     if (response.statusCode == 404) {
-      throw Exception('Task not found: ${response.body}');
+      throw DartApiNotFoundException('Task not found: ${response.body}', statusCode: 404);
+    }
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode != 200) {
+      throw DartApiUnknownException('Failed to delete task: ${response.body}', statusCode: response.statusCode);
     }
   }
 
@@ -332,8 +400,14 @@ class DartProjectManagementApi {
       },
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 400) {
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to list tasks: ${response.body}');
+      throw DartApiUnknownException('Failed to list tasks: ${response.body}', statusCode: response.statusCode);
     }
 
     return TaskListResponse.fromJson(
@@ -368,8 +442,14 @@ class DartProjectManagementApi {
       },
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 404) {
+      throw DartApiNotFoundException('Folder not found: ${response.body}', statusCode: 404);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to load folder: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to load folder: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -406,15 +486,16 @@ class DartProjectManagementApi {
     );
 
     if (response.statusCode == 400) {
-      throw Exception('Invalid request: ${response.body}');
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
     }
-
     if (response.statusCode == 404) {
-      throw Exception('View not found: ${response.body}');
+      throw DartApiNotFoundException('View not found: ${response.body}', statusCode: 404);
     }
-
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to load view: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to load view: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -454,8 +535,14 @@ class DartProjectManagementApi {
       body: jsonEncode({'item': request.toJson()}),
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 400) {
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to create document: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to create document: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -496,8 +583,17 @@ class DartProjectManagementApi {
       body: jsonEncode({'item': request.toJson()}),
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 404) {
+      throw DartApiNotFoundException('Document not found: ${response.body}', statusCode: 404);
+    }
+    if (response.statusCode == 400) {
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to update document: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to update document: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -527,8 +623,14 @@ class DartProjectManagementApi {
       },
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 404) {
+      throw DartApiNotFoundException('Document not found: ${response.body}', statusCode: 404);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete document: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to delete document: ${response.statusCode}', statusCode: response.statusCode);
     }
   }
 
@@ -580,8 +682,14 @@ class DartProjectManagementApi {
       },
     );
 
+    if (response.statusCode == 401) {
+      throw DartApiUnauthorizedException('Unauthorized: ${response.body}', statusCode: 401);
+    }
+    if (response.statusCode == 400) {
+      throw DartApiValidationException('Invalid request: ${response.body}', statusCode: 400);
+    }
     if (response.statusCode != 200) {
-      throw Exception('Failed to list documents: ${response.statusCode}');
+      throw DartApiUnknownException('Failed to list documents: ${response.statusCode}', statusCode: response.statusCode);
     }
 
     return DocListResponse.fromJson(

@@ -84,9 +84,33 @@ try {
     name: 'New Project',
   );
 } on DartApiException catch (e) {
-  print('API Error: ${e.message}');
-} on NetworkException catch (e) {
-  print('Network Error: ${e.message}');
+  print('API Error: \\${e.message}');
+}
+```
+
+### API Exceptions
+
+All API errors throw a subclass of `DartApiException`. You can catch specific exceptions to handle different error cases:
+
+- `DartApiUnauthorizedException` — The request was not authorized (HTTP 401)
+- `DartApiNotFoundException` — The requested resource was not found (HTTP 404)
+- `DartApiValidationException` — The request was invalid (HTTP 400)
+- `DartApiNetworkException` — A network error occurred (connection issues, etc.)
+- `DartApiUnknownException` — Any other error returned by the API
+
+#### Example
+
+```dart
+try {
+  final task = await dartApi.getTask('task-id');
+} on DartApiNotFoundException catch (e) {
+  print('Not found: \\${e.message}');
+} on DartApiUnauthorizedException catch (e) {
+  print('Unauthorized: \\${e.message}');
+} on DartApiValidationException catch (e) {
+  print('Validation error: \\${e.message}');
+} on DartApiException catch (e) {
+  print('API error: \\${e.message}');
 }
 ```
 

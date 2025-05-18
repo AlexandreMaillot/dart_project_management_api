@@ -1,0 +1,28 @@
+{
+  "name": "dart_project_management_api",
+  "version": "1.0.0",
+  "description": "[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link] [![Powered by Mason](https://img.shields.io/endpoint?url=https%3A%2F%2Ftinyurl.com%2Fmason-badge)](https://github.com/felangel/mason) [![License: MIT][license_badge]][license_link]",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexandreMaillot/dart_project_management_api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AlexandreMaillot/dart_project_management_api/issues"
+  },
+  "homepage": "https://github.com/AlexandreMaillot/dart_project_management_api#readme",
+  "dependencies": {
+    "dart-mcp-server": "^0.1.13"
+  }
+}
