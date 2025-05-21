@@ -28,23 +28,33 @@ void main() async {
     token: 'your-dart-token-here', // Get this from Dart Settings > Account
   );
 
-  // Create a new project
-  final project = await dartApi.createProject(
-    name: 'My New Project',
-    description: 'Project description',
-  );
-
   // Add a task
   final task = await dartApi.createTask(
-    projectId: project.id,
-    title: 'Implement new feature',
-    description: 'Task description',
+    TaskRequest(
+      dartboard: 'project_id',
+      title: 'Implement new feature',
+      description: 'Task description',
+      // Add other optional fields if needed
+    ),
+  );
+
+  // Ajouter un commentaire à une tâche
+  final comment = await dartApi.createComment(
+    CommentRequest(
+      taskId: task.id!,
+      text: 'This is a comment',
+    ),
   );
 
   // View project configuration
-  final config = await dartApi.getProjectConfiguration(
-    projectId: project.id,
-  );
+  final config = await dartApi.getConfig();
+
+  // Example of accessing configuration:
+  print('Today\'s date: \\${config.today}');
+  print('User: \\${config.user.name}');
+  print('Available dartboards: \\${config.dartboards}');
+  print('Available types: \\${config.types}');
+  // ... other properties as needed
 }
 ```
 
@@ -213,17 +223,19 @@ final dartApi = DartProjectManagementApi(
 );
 
 // Get project configuration
-final projectConfig = await dartApi.getProjectConfiguration(
-  projectId: 'your-project-id',
-);
+final config = await dartApi.getConfig();
 
-// The configuration contains the following information:
-print('Project name: ${projectConfig.name}');
-print('Description: ${projectConfig.description}');
-print('Creation date: ${projectConfig.createdAt}');
-print('Status: ${projectConfig.status}');
-print('Team members: ${projectConfig.teamMembers}');
-print('Notification settings: ${projectConfig.notificationSettings}');
+// La configuration contient les informations suivantes :
+print('Current date: ${config.today}');
+print('Current user: ${config.user}');
+print('Available dartboards: ${config.dartboards}');
+print('Available folders: ${config.folders}');
+print('Available types: ${config.types}');
+print('Available statuses: ${config.statuses}');
+print('Available assignees: ${config.assignees}');
+print('Available tags: ${config.tags}');
+print('Available priorities: ${config.priorities}');
+print('Available sizes: ${config.sizes}');
 ```
 
 ## Contributing 🤝
